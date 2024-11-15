@@ -17,12 +17,16 @@ import random
 from pprint import pprint
 
 # Libs
+from plyer import notification
 import numpy as np
 import pandas as pd
 import PySide6
 from PySide6.QtCore import *
+from PySide6.QtCore import Qt
 from PySide6 import QtCore, QtGui, QtWidgets
-from PySide6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QLabel, QMessageBox
+from PySide6.QtWidgets import (
+    QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLineEdit, QPushButton, QLabel, QGridLayout, QVBoxLayout, QWidget, QLabel, QMessageBox
+)
 from PySide6.QtWebEngineWidgets import QWebEngineView
 from PySide6.QtGui import QIcon
 
@@ -46,7 +50,7 @@ class Godopolis_OS:
 
         root_path = str(os.getcwd())
         self.ui.setWindowIcon(QIcon(root_path + "/ros2_ws/src/gcs_mission_interface/gcs_mission_interface/resources/gcs_mission_interface_logo.jpeg"))
-        self.ui.setWindowTitle("GCS Mission Interface")
+        self.ui.setWindowTitle("Godopolis Casino OS")
 
         # ----------------------------------- Event meta
         self.event_variables = {
@@ -54,8 +58,184 @@ class Godopolis_OS:
             }
 
         # ----------------------------------- Create widgets
-        # ---- Dealers widget
-        # -> Init
+        self.init_dashboard()
+        self.init_dealer_widget()
+        self.init_player_widget()
+        self.init_timeline_widget()
+
+        # ----------------------------------- Final setup
+        # -> Display windows
+        self.ui.show()
+
+        # ----------------------------------- Terminate ROS2 node on exit
+        # self.ros_node.destroy_node()
+        sys.exit(app.exec())
+
+    # ========================================================== Misc
+    def send_dealer_change_notification(self, dealer_name, game):
+        print(f"{dealer_name.capitalize()} is scheduled for: {game}.")
+        try:
+            notification.notify(
+                title="Dealer Change Notification",
+                message=f"{dealer_name.capitalize()} is scheduled for: {game}.",
+                timeout=10  # Time in seconds the notification will be visible
+            )
+        except Exception as e:
+            print(f"Error sending notification: {e}")
+
+    # ========================================================== Dashboard
+    def init_dashboard(self):
+        # Label to display status
+        self.label = QLabel("Godopolis Casino")
+        self.label.setStyleSheet("font-size: 18px;")
+        self.label.setAlignment(Qt.AlignCenter)
+        self.ui.verticalLayout_tickets.addWidget(self.label)
+
+        # Input field for value
+        self.value_input = QLineEdit()
+        self.value_input.setReadOnly(True)  # Prevent typing, only number pad input
+        self.value_input.setAlignment(Qt.AlignCenter)
+        self.value_input.setStyleSheet("font-size: 24px; height: 50px; padding: 15px;")
+        self.value_input.setPlaceholderText("Enter amount...")
+        self.ui.verticalLayout_tickets.addWidget(self.value_input)
+
+        # Number pad
+        number_pad_layout = QGridLayout()
+        buttons = {
+            "7": (0, 0), "8": (0, 1), "9": (0, 2),
+            "4": (1, 0), "5": (1, 1), "6": (1, 2),
+            "1": (2, 0), "2": (2, 1), "3": (2, 2),
+            "0": (3, 1), ".": (3, 0), "C": (3, 2),
+        }
+
+        for btn_text, pos in buttons.items():
+            button = QPushButton(btn_text)
+            button.clicked.connect(partial(self.handle_number_pad_input, btn_text))
+            button.setStyleSheet("font-size: 18px; padding: 20px;")
+            number_pad_layout.addWidget(button, pos[0], pos[1])
+
+        self.ui.verticalLayout_tickets.addLayout(number_pad_layout)
+
+        # Action buttons
+        action_layout_1 = QHBoxLayout()
+
+        print_button = QPushButton("Print ticket")
+        print_button.setStyleSheet("font-size: 18px; padding: 15px;")
+        print_button.clicked.connect(self.print_ticket)
+        action_layout_1.addWidget(print_button)
+
+        clear_button = QPushButton("Clear")
+        clear_button.setStyleSheet("font-size: 18px; padding: 15px;")
+        clear_button.clicked.connect(self.clear_value)
+        action_layout_1.addWidget(clear_button)
+
+        self.ui.verticalLayout_tickets.addLayout(action_layout_1)
+
+        action_layout_2 = QHBoxLayout()
+
+        credit_to_card_button = QPushButton("Credit to Card")
+        credit_to_card_button.setStyleSheet("font-size: 18px; padding: 15px;")
+        credit_to_card_button.clicked.connect(self.credit_to_card)
+        action_layout_2.addWidget(credit_to_card_button)
+
+        load_from_card_button = QPushButton("Load from Card")
+        load_from_card_button.setStyleSheet("font-size: 18px; padding: 15px;")
+        load_from_card_button.clicked.connect(self.load_from_card)
+        action_layout_2.addWidget(load_from_card_button)
+
+        self.ui.verticalLayout_tickets.addLayout(action_layout_2)
+
+        # -> Load logs
+        self.load_logs()
+
+    def load_logs(self):
+        # -> Clear plainTextEdit_bank_logs
+        self.ui.plainTextEdit_bank_logs.clear()
+
+        # -> Load logs from txt file
+        with open("data/bank_logs.txt", "r") as file:
+            logs = file.read()
+
+        # -> Display logs
+        self.ui.plainTextEdit_bank_logs.setPlainText(logs)
+        self.ui.plainTextEdit_bank_logs.moveCursor(QtGui.QTextCursor.End)  # Scroll to the bottom
+
+    def log_action(self, action, amount):
+        # -> Log the action
+        with open("data/bank_logs.txt", "a") as file:
+            timestamp = datetime.now()
+            timestamp = timestamp.replace(microsecond=0)
+
+            file.write(f"{timestamp} - {action} - {amount}\n")
+
+        # -> Reload logs
+        self.load_logs()
+
+    def handle_number_pad_input(self, btn_text):
+        if btn_text == "C":  # Clear the last character
+            current_text = self.value_input.text()
+            self.value_input.setText(current_text[:-1])
+        else:
+            self.value_input.setText(self.value_input.text() + btn_text)
+
+    def clear_value(self):
+        # Clear the input field
+        self.value_input.clear()
+
+    def print_ticket(self):
+        # Retrieve the value and perform the print action
+        value = self.value_input.text()
+        if value.strip():  # Ensure the value is not empty
+            # TODO: Send amount to printer
+            pass
+
+        # -> Clear the input field
+        self.value_input.clear()
+
+        # -> Log the action
+        self.log_action("Printed ticket", value)
+
+    def credit_to_card(self):
+        value = self.value_input.text()
+        if value.strip():
+
+            # TODO: Finish logic
+            # > Open credit dialog
+            reply = QMessageBox.question(self.ui,
+                                         'Credit to card',
+                                         f"Present card to credit: \n{value}",
+                                         QMessageBox.Cancel|QMessageBox.Ok)
+
+            if reply == QMessageBox.Cancel:
+                pass
+
+            else:
+                self.value_input.clear()
+
+                # -> Log the action
+                self.log_action("Credited card", value)
+
+    def load_from_card(self):
+        value = random.randint(0, 1000)
+
+        # TODO: Finish logic
+        # > Open load dialog
+        reply = QMessageBox.question(self.ui,
+                                        'Load from card',
+                                        f"Present card to load credits",
+                                        QMessageBox.Cancel|QMessageBox.Ok)
+
+        if reply == QMessageBox.Cancel:
+            pass
+
+        else:
+            self.value_input.setText(str(value))
+
+            # -> Log the action
+            self.log_action("Loaded from card", value)
+
+    # ========================================================== DealerWidget
+    def init_dealer_widget(self):
         # > Create the WebEngine view
         self.gantt_web_view = QWebEngineView()
 
@@ -68,35 +248,34 @@ class Godopolis_OS:
         self.timer.start(60000)
 
         # -> Connect buttons
-        self.ui.pushButton_refresh_schedule.clicked.connect(self.update_gantt_chart)
+        self.ui.pushButton_refresh_gantts.clicked.connect(self.update_gantt_chart)
         self.ui.layout_gantt_dealers.addWidget(self.gantt_web_view)
 
-        # ---- Players widget
-        # -> Init
-        self.players_dict = {}
-        self.load_players()
-
-        # -> Connect buttons
-        self.ui.pushButton_refresh_players.clicked.connect(self.sync_players)
-        self.ui.lineEdit_searchbox_player.returnPressed.connect(self.find_player)
-        self.ui.pushButton_player_search.clicked.connect(self.find_player)
-        self.ui.pushButton_player_add.clicked.connect(self.add_player)
-        self.ui.pushButton_player_remove.clicked.connect(self.remove_player)
-        self.ui.tableWidget_players_overview.selectionModel().selectionChanged.connect(self.select_player)
-
-        # ----------------------------------- Final setup
-        # -> Display windows
-        self.ui.show()
-
-        # ----------------------------------- Terminate ROS2 node on exit
-        # self.ros_node.destroy_node()
-        sys.exit(app.exec())
-
-    # ========================================================== DealerWidget
     def update_gantt_chart(self):
         # -> Update the gantt chart
         chart_path = self.create_dealer_gantt_chart()
         self.gantt_web_view.setUrl(f"file://{chart_path}")
+
+        # -> Load data from CSV
+        # df = pd.read_csv("data/dealer_schedule.csv", sep="\t")
+
+        # -> Convert Start_Time and End_Time to datetime
+        # df["Start_Time"] = pd.to_datetime(df["Start_Time"], format="%d/%m/%Y %H:%M")
+        # df["End_Time"] = pd.to_datetime(df["End_Time"], format="%d/%m/%Y %H:%M")
+
+        df = pd.read_csv("data/gdealer_schedule.csv", sep="\t")
+        df["Start_Time"] = pd.to_datetime(df["Start_Time"], format="%Y-%m-%d %H:%M:%S")
+        df["End_Time"] = pd.to_datetime(df["End_Time"], format="%Y-%m-%d %H:%M:%S")
+
+        # -> For each game, check if previous minute's dealer was different. If so, send a notification
+        current_time = datetime.now().replace(second=0, microsecond=0)
+        current_time = datetime(year=2024, month=11, day=30, hour=16, minute=7, second=0)
+
+        for index, row in df.iterrows():
+            # Check if the current time is within the start and end time for the dealer shift and is within a minute of the start time
+            if row['Start_Time'] <= current_time <= row['End_Time'] and current_time - row['Start_Time'] < pd.Timedelta(minutes=1):
+                # Send a notification if the game is scheduled at the current time
+                self.send_dealer_change_notification(row['Dealer'], row['Game'])
 
     def create_dealer_gantt_chart(self):
         # -> Load data from CSV
@@ -117,8 +296,9 @@ class Godopolis_OS:
             x_end="End_Time",
             y="Game",
             color="Dealer",
-            title="Dealer Assignments to Games Throughout the Night",
-            labels={"Dealer": "Assigned Dealer"},
+            title="Dealer Schedule",
+            labels={"Dealer": "Dealers"},
+            text="Game"
         )
 
         # -> Update layout for better readability
@@ -127,12 +307,124 @@ class Godopolis_OS:
             yaxis_title="Games",
             xaxis_tickformat="%H:%M",
             bargap=0.2,
+            xaxis_range=["2024-11-30 20:00", "2024-12-01 00:00"],
+            yaxis = dict(
+                showticklabels=False,  # Hide the y-axis labels
+                title=None,
+                side="right",  # Position y-axis on the right
+            ),
+            legend=dict(
+                orientation="h",  # Make the legend horizontal
+                yanchor="bottom",  # Anchor the legend to the bottom
+                y=1.05,  # Position it below the plot
+                xanchor="center",  # Center the legend horizontally
+                x=0.5,  # Align the legend to the center of the plot
+            ),
+            margin=dict(l=10, r=10, b=10)
         )
 
         # -> Add a vertical line for the current time
         # > Define the current time line as a shape
         current_time = datetime.now().replace(second=0, microsecond=0)
-        current_time = datetime(year=2024, month=11, day=30, hour=20, minute=random.randint(0, 59))
+
+        # -> Change the day to the 30th
+        current_time = current_time.replace(day=30)
+
+        fig.add_shape(
+            type="line",
+            x0=current_time,
+            y0=0,
+            x1=current_time,
+            y1=1,
+            xref="x",
+            yref="paper",  # "paper" makes it span vertically across the plot area
+            line=dict(
+                # color="red",
+                width=1,
+                dash="dash"
+            ),
+        )
+
+        # > Add an annotation for the current time
+        fig.add_annotation(
+            x=current_time,
+            y=1,
+            text="Current Time",
+            showarrow=False,
+            xref="x",
+            yref="paper",
+            xanchor="left",
+            yanchor="bottom",
+            font=dict(color="red"),
+        )
+
+        # -> Save chart to a temporary HTML file
+        temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".html")
+        fig.write_html(temp_file.name)
+        return temp_file.name
+
+    # ========================================================== TimelineWidget
+    def init_timeline_widget(self):
+        # > Create the WebEngine view
+        self.timeline_web_view = QWebEngineView()
+
+        # > Create initial timeline
+        self.update_timeline_chart()
+
+        # > Start a timer to update the chart every minute
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.update_timeline_chart)
+        self.timer.start(60000)
+
+        # -> Connect buttons
+        self.ui.pushButton_refresh_gantts.clicked.connect(self.update_timeline_chart)
+        self.ui.layout_gantt_timeline.addWidget(self.timeline_web_view)
+
+    def update_timeline_chart(self):
+        # -> Update the timeline chart
+        chart_path = self.create_timeline_chart()
+        self.timeline_web_view.setUrl(f"file://{chart_path}")
+
+    def create_timeline_chart(self):
+        df = pd.read_csv("data/event_timeline.csv", sep="\t")
+
+        # -> Convert Start_Time and End_Time to datetime
+        df["Start_Time"] = pd.to_datetime(df["Start_Time"], format="%d/%m/%Y %H:%M")
+        df["End_Time"] = pd.to_datetime(df["End_Time"], format="%d/%m/%Y %H:%M")
+
+        # -> Create a Gantt chart using Plotly Express
+        fig = px.timeline(
+            df,
+            x_start="Start_Time",
+            x_end="End_Time",
+            y="Event",
+            color="Event",
+            title="Evening Timeline",
+            text="Event",
+        )
+
+        # -> Update layout for better readability
+        fig.update_layout(
+            xaxis_title="Time",
+            yaxis_title="Games",
+            xaxis_tickformat="%H:%M",
+            bargap=0.2,
+            showlegend=False,
+            xaxis_range=["2024-11-30 18:00", "2024-12-01 1:00"],
+            yaxis=dict(
+                showticklabels=False,  # Hide the y-axis labels
+                title=None,  # Hide the y-axis title
+                side="right",  # Position y-axis on the right
+            ),
+            margin=dict(l=10, r=10, b=10, t=35),
+        )
+
+        # -> Add a vertical line for the current time
+        # > Define the current time line as a shape
+        current_time = datetime.now().replace(second=0, microsecond=0)
+
+        # -> Change the day to the 30th
+        current_time = current_time.replace(day=30)
 
         fig.add_shape(
             type="line",
@@ -168,6 +460,18 @@ class Godopolis_OS:
         return temp_file.name
 
     # ========================================================== PlayerWidget
+    def init_player_widget(self):
+        self.players_dict = {}
+        self.load_players()
+
+        # -> Connect buttons
+        self.ui.pushButton_refresh_players.clicked.connect(self.sync_players)
+        self.ui.lineEdit_searchbox_player.returnPressed.connect(self.find_player)
+        self.ui.pushButton_player_search.clicked.connect(self.find_player)
+        self.ui.pushButton_player_add.clicked.connect(self.add_player)
+        self.ui.pushButton_player_remove.clicked.connect(self.remove_player)
+        self.ui.tableWidget_players_overview.selectionModel().selectionChanged.connect(self.select_player)
+
     def add_player(self):
         # -> Get name
         name = self.ui.lineEdit_searchbox_player.text()
