@@ -257,19 +257,15 @@ class Godopolis_OS:
         self.gantt_web_view.setUrl(f"file://{chart_path}")
 
         # -> Load data from CSV
-        # df = pd.read_csv("data/dealer_schedule.csv", sep="\t")
+        df = pd.read_csv("data/dealer_schedule.csv")
 
         # -> Convert Start_Time and End_Time to datetime
-        # df["Start_Time"] = pd.to_datetime(df["Start_Time"], format="%d/%m/%Y %H:%M")
-        # df["End_Time"] = pd.to_datetime(df["End_Time"], format="%d/%m/%Y %H:%M")
-
-        df = pd.read_csv("data/gdealer_schedule.csv", sep="\t")
-        df["Start_Time"] = pd.to_datetime(df["Start_Time"], format="%Y-%m-%d %H:%M:%S")
-        df["End_Time"] = pd.to_datetime(df["End_Time"], format="%Y-%m-%d %H:%M:%S")
+        df["Start_Time"] = pd.to_datetime(df["Start_Time"], format="%d/%m/%Y %H:%M")
+        df["End_Time"] = pd.to_datetime(df["End_Time"], format="%d/%m/%Y %H:%M")
 
         # -> For each game, check if previous minute's dealer was different. If so, send a notification
         current_time = datetime.now().replace(second=0, microsecond=0)
-        current_time = datetime(year=2024, month=11, day=30, hour=16, minute=7, second=0)
+        # current_time = datetime(year=2024, month=11, day=30, hour=16, minute=7, second=0)
 
         for index, row in df.iterrows():
             # Check if the current time is within the start and end time for the dealer shift and is within a minute of the start time
@@ -279,35 +275,33 @@ class Godopolis_OS:
 
     def create_dealer_gantt_chart(self):
         # -> Load data from CSV
-        # df = pd.read_csv("data/dealer_schedule.csv", sep="\t")
+        df = pd.read_csv("data/dealer_schedule.csv")
 
         # -> Convert Start_Time and End_Time to datetime
-        # df["Start_Time"] = pd.to_datetime(df["Start_Time"], format="%d/%m/%Y %H:%M")
-        # df["End_Time"] = pd.to_datetime(df["End_Time"], format="%d/%m/%Y %H:%M")
+        df["Start_Time"] = pd.to_datetime(df["Start_Time"], format="%d/%m/%Y %H:%M")
+        df["End_Time"] = pd.to_datetime(df["End_Time"], format="%d/%m/%Y %H:%M")
 
-        df = pd.read_csv("data/gdealer_schedule.csv", sep="\t")
-        df["Start_Time"] = pd.to_datetime(df["Start_Time"], format="%Y-%m-%d %H:%M:%S")
-        df["End_Time"] = pd.to_datetime(df["End_Time"], format="%Y-%m-%d %H:%M:%S")
+        df = df.sort_values(by="Start_Time")
 
         # -> Create a Gantt chart using Plotly Express
         fig = px.timeline(
             df,
             x_start="Start_Time",
             x_end="End_Time",
-            y="Game",
+            y="Activity",
             color="Dealer",
             title="Dealer Schedule",
             labels={"Dealer": "Dealers"},
-            text="Game"
+            text="Activity"
         )
 
         # -> Update layout for better readability
         fig.update_layout(
             xaxis_title="Time",
-            yaxis_title="Games",
+            yaxis_title="Activities",
             xaxis_tickformat="%H:%M",
             bargap=0.2,
-            xaxis_range=["2024-11-30 20:00", "2024-12-01 00:00"],
+            xaxis_range=["2024-11-30 18:45", "2024-12-01 00:45"],
             yaxis = dict(
                 showticklabels=False,  # Hide the y-axis labels
                 title=None,
@@ -386,7 +380,7 @@ class Godopolis_OS:
         self.timeline_web_view.setUrl(f"file://{chart_path}")
 
     def create_timeline_chart(self):
-        df = pd.read_csv("data/event_timeline.csv", sep="\t")
+        df = pd.read_csv("data/event_timeline.csv")
 
         # -> Convert Start_Time and End_Time to datetime
         df["Start_Time"] = pd.to_datetime(df["Start_Time"], format="%d/%m/%Y %H:%M")
@@ -397,20 +391,20 @@ class Godopolis_OS:
             df,
             x_start="Start_Time",
             x_end="End_Time",
-            y="Event",
-            color="Event",
+            y="Activity",
+            color="Activity",
             title="Evening Timeline",
-            text="Event",
+            text="Activity",
         )
 
         # -> Update layout for better readability
         fig.update_layout(
             xaxis_title="Time",
-            yaxis_title="Games",
+            yaxis_title="Activities",
             xaxis_tickformat="%H:%M",
             bargap=0.2,
             showlegend=False,
-            xaxis_range=["2024-11-30 18:00", "2024-12-01 1:00"],
+            xaxis_range=["2024-11-30 18:45", "2024-12-01 00:45"],
             yaxis=dict(
                 showticklabels=False,  # Hide the y-axis labels
                 title=None,  # Hide the y-axis title
@@ -461,16 +455,19 @@ class Godopolis_OS:
 
     # ========================================================== PlayerWidget
     def init_player_widget(self):
-        self.players_dict = {}
         self.load_players()
+        self.sync_players()
 
         # -> Connect buttons
         self.ui.pushButton_refresh_players.clicked.connect(self.sync_players)
         self.ui.lineEdit_searchbox_player.returnPressed.connect(self.find_player)
+        self.ui.lineEdit_searchbox_player.textChanged.connect(self.filter_players)
         self.ui.pushButton_player_search.clicked.connect(self.find_player)
         self.ui.pushButton_player_add.clicked.connect(self.add_player)
         self.ui.pushButton_player_remove.clicked.connect(self.remove_player)
         self.ui.tableWidget_players_overview.selectionModel().selectionChanged.connect(self.select_player)
+        # -> Connect double-click signal
+        self.ui.tableWidget_players_overview.cellDoubleClicked.connect(self.fill_search_box)
 
     def add_player(self):
         # -> Get name
@@ -515,28 +512,71 @@ class Godopolis_OS:
             self.sync_players()
 
     def find_player(self) -> Optional[dict]:
-        # -> Get name
-        name = self.ui.lineEdit_searchbox_player.text()
+        # Get the input text from the search box
+        name_fragment = self.ui.lineEdit_searchbox_player.text().strip().lower()
 
-        if not name:
-            return
+        if not name_fragment:
+            return None
 
-        if name not in self.players_dict.keys():
-            # -> Open warning dialog
-            QMessageBox.warning(self.ui,
-                                'Warning',
-                                f"Player {name} not found.",
-                                QMessageBox.Ok)
+        # Find the closest match
+        closest_match = None
+        closest_distance = float('inf')
 
-        else:
-            # -> Find and select player row
-            for i in range(self.ui.tableWidget_players_overview.rowCount()):
-                item = self.ui.tableWidget_players_overview.verticalHeaderItem(i)
-                if item.text() == name:
-                    self.ui.tableWidget_players_overview.selectRow(i)
-                    break
+        for i in range(self.ui.tableWidget_players_overview.rowCount()):
+            # Get the player name for the current row
+            player_name = self.ui.tableWidget_players_overview.verticalHeaderItem(i).text()
+            player_name_lower = player_name.lower()
 
-        return self.players_dict.get(name, None)
+            # Calculate the "distance" using simple substring containment or Levenshtein distance
+            if name_fragment in player_name_lower:
+                distance = len(player_name_lower) - len(name_fragment)
+            else:
+                # Fallback to Levenshtein distance (useful for fuzzy matching)
+                distance = self.levenshtein_distance(name_fragment, player_name_lower)
+
+            # Update the closest match if this is a better match
+            if distance < closest_distance:
+                closest_distance = distance
+                closest_match = i
+
+        if closest_match is not None:
+            # Select the closest match in the table
+            self.ui.tableWidget_players_overview.selectRow(closest_match)
+
+            # Fill the search box with the closest match's name
+            player_name = self.ui.tableWidget_players_overview.verticalHeaderItem(closest_match).text()
+            self.ui.lineEdit_searchbox_player.clear()
+
+            # Return the corresponding player data from the dictionary
+            return self.players_dict.get(player_name, None)
+
+        # If no match is found, show a warning
+        QMessageBox.warning(self.ui,
+                            'Warning',
+                            f"No match found for '{name_fragment}'.",
+                            QMessageBox.Ok)
+        return None
+
+    def levenshtein_distance(self, s1: str, s2: str) -> int:
+        # Create a distance matrix
+        m, n = len(s1), len(s2)
+        dp = [[0] * (n + 1) for _ in range(m + 1)]
+
+        # Initialize the matrix
+        for i in range(m + 1):
+            dp[i][0] = i
+        for j in range(n + 1):
+            dp[0][j] = j
+
+        # Fill the matrix
+        for i in range(1, m + 1):
+            for j in range(1, n + 1):
+                if s1[i - 1] == s2[j - 1]:
+                    dp[i][j] = dp[i - 1][j - 1]
+                else:
+                    dp[i][j] = 1 + min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1])
+
+        return dp[m][n]
 
     def load_players(self):
         if os.path.exists("data/players.json"):
@@ -545,17 +585,27 @@ class Godopolis_OS:
 
             self.players_dict = players_dict
 
-        self.sync_players()
+        else:
+            self.players_dict = {}
 
     def save_players(self):
         with open("data/players.json", "w") as file:
             file.write(dumps(self.players_dict))
 
     def sync_players(self):
-        pprint(self.players_dict, indent=4)
-
+        # pprint(self.players_dict, indent=4)
         self.save_players()
+        self.load_players()
+
         self.refresh_players_table()
+
+    def fill_search_box(self, row, column):
+        # Get the name of the player from the vertical header of the clicked row
+        player_name_item = self.ui.tableWidget_players_overview.verticalHeaderItem(row)
+        if player_name_item:  # Ensure the item exists
+            player_name = player_name_item.text()
+            # Set the name in the search box
+            self.ui.lineEdit_searchbox_player.setText(player_name)
 
     def refresh_players_table(self):
         # -> Clear table
@@ -564,9 +614,12 @@ class Godopolis_OS:
         # -> Construct pandas table from players_dict (or your DataFrame)
         df = pd.DataFrame(self.players_dict).T
 
+        # -> Sort players by index
+        df = df.sort_index()
+
         # -> Update table
         # > Set the column headers
-        headers = ["Present", "Score"]
+        headers = ["Present", "Chips ticket collected", "Final money", "Kill count"]
         self.ui.tableWidget_players_overview.setColumnCount(len(headers))
         self.ui.tableWidget_players_overview.setHorizontalHeaderLabels(headers)
 
@@ -579,9 +632,27 @@ class Godopolis_OS:
             QtWidgets.QHeaderView.ResizeToContents)
 
         # > Set the data
-        for i, (index, row) in enumerate(df.iterrows()):
-            for j, value in enumerate(row):
-                self.ui.tableWidget_players_overview.setItem(i, j, QtWidgets.QTableWidgetItem(str(value)))
+        for i, (player_name, player_data) in enumerate(df.iterrows()):
+            for j, value in enumerate(player_data):
+                item = QtWidgets.QTableWidgetItem(str(value))
+                item.setFlags(item.flags() & ~Qt.ItemIsEditable)  # Make the cell read-only
+                self.ui.tableWidget_players_overview.setItem(i, j, item)
+
+        # > Resize columns to contents
+        self.ui.tableWidget_players_overview.resizeColumnsToContents()
+
+        # > Set last column elastic
+        self.ui.tableWidget_players_overview.horizontalHeader().setStretchLastSection(True)
+
+    def filter_players(self):
+        # Get the current text from the search box
+        filter_text = self.ui.lineEdit_searchbox_player.text().lower()
+
+        # Show or hide rows based on the filter text
+        for row in range(self.ui.tableWidget_players_overview.rowCount()):
+            player_name = self.ui.tableWidget_players_overview.verticalHeaderItem(row).text().lower()
+            is_match = filter_text in player_name
+            self.ui.tableWidget_players_overview.setRowHidden(row, not is_match)
 
     def select_player(self):
         # -> Get the selected row (if any)
@@ -592,14 +663,106 @@ class Godopolis_OS:
             player_name_item = self.ui.tableWidget_players_overview.verticalHeaderItem(selected_row)
             player_name = player_name_item.text()
 
-            # -> Update the search box
-            self.ui.lineEdit_searchbox_player.setText(player_name)
+            # -> Clear the search box
+            self.ui.lineEdit_searchbox_player.clear()
+
+            # -> Set selected player name label
+            self.ui.label_player_selected.setText(player_name)
+
+            # -> Set the player data in the input fields
+            # > Present checkbox
+            self.ui.checkBox_player_present.setChecked(self.players_dict[player_name]["Present"])
+
+            # > Chips ticket collected checkbox
+            self.ui.checkBox_chips_ticket.setChecked(self.players_dict[player_name]["Chips ticket collected"])
+            self.ui.pushButton_print_chips_ticket.setEnabled(not self.players_dict[player_name]["Chips ticket collected"])
+
+            # > Connect signals
+            self.ui.checkBox_player_present.clicked.connect(self.set_player_present)
+            self.ui.checkBox_chips_ticket.clicked.connect(self.set_chips_ticket_collected)
+            self.ui.pushButton_print_chips_ticket.clicked.connect(self.print_chips_ticket)
+
+            # > Final money spinbox
+            self.ui.spinBox_final_money.setValue(self.players_dict[player_name]["Final money"])
+            self.ui.spinBox_final_money.valueChanged.connect(self.set_player_final_money)
+
+            # > Kill count spinbox
+            self.ui.spinBox_kill_count.setValue(self.players_dict[player_name]["Kill count"])
+            self.ui.spinBox_kill_count.valueChanged.connect(self.set_player_kill_count)
+
+    def set_player_present(self):
+        # -> Get the selected player name
+        player_name = self.ui.label_player_selected.text()
+
+        # -> Update the player data
+        self.players_dict[player_name]["Present"] = self.ui.checkBox_player_present.isChecked()
+
+        # -> Refresh table
+        self.sync_players()
+
+        # -> Log the action
+        self.log_action("Set player present", player_name)
+
+    def set_chips_ticket_collected(self):
+        # -> Get the selected player name
+        player_name = self.ui.label_player_selected.text()
+
+        # -> Update the player data
+        self.players_dict[player_name]["Chips ticket collected"] = self.ui.checkBox_chips_ticket.isChecked()
+
+        # -> If the chips ticket is collected, disable the print button
+        self.ui.pushButton_print_chips_ticket.setEnabled(not self.players_dict[player_name]["Chips ticket collected"])
+
+        # -> Refresh table
+        self.sync_players()
+
+        # -> Log the action
+        self.log_action("Set chips ticket collected", player_name)
+
+    def print_chips_ticket(self):
+        # -> Get the selected player name
+        player_name = self.ui.label_player_selected.text()
+
+        # -> Print the chips ticket
+        print(f"Chips ticket printed for {player_name}.")
+
+        # -> Set the chips ticket collected checkbox to True
+        self.ui.checkBox_chips_ticket.setChecked(True)
+        self.set_chips_ticket_collected()
+
+        # -> Refresh table
+        self.sync_players()
+
+        # -> Log the action
+        self.log_action("Printed chips ticket", player_name)
+
+    def set_player_final_money(self):
+        # -> Get the selected player name
+        player_name = self.ui.label_player_selected.text()
+
+        # -> Update the player data
+        self.players_dict[player_name]["Final money"] = self.ui.spinBox_final_money.value()
+
+        # -> Refresh table
+        self.sync_players()
+
+    def set_player_kill_count(self):
+        # -> Get the selected player name
+        player_name = self.ui.label_player_selected.text()
+
+        # -> Update the player data
+        self.players_dict[player_name]["Kill count"] = self.ui.spinBox_kill_count.value()
+
+        # -> Refresh table
+        self.sync_players()
 
     @property
     def player_template(self):
         template = {
             'Present': False,
-            'Score': 0
+            'Chips ticket collected': False,
+            'Final money': 0,
+            'Kill count': 0,
         }
 
         return deepcopy(template)

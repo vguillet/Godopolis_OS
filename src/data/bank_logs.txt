@@ -8,3 +8,162 @@
 2024-11-15 15:51:54 - Printed ticket - 10
 2024-11-15 15:52:40 - Printed ticket - 8000
 2024-11-15 15:52:46 - Credited card - 304
+2024-11-16 16:45:49 - Printed ticket - 852
+2024-11-16 16:47:57 - Printed ticket - 1000
+2024-11-24 15:01:33 - Set player present - Chloe
+2024-11-24 15:01:43 - Set player present - Gwen
+2024-11-24 15:01:43 - Set player present - Gwen
+2024-11-24 15:01:43 - Set player present - Gwen
+2024-11-24 15:01:43 - Set player present - Gwen
+2024-11-24 15:01:45 - Set player present - Gwen
+2024-11-24 15:01:45 - Set player present - Gwen
+2024-11-24 15:01:45 - Set player present - Gwen
+2024-11-24 15:01:45 - Set player present - Gwen
+2024-11-24 15:01:46 - Set player present - Gwen
+2024-11-24 15:01:46 - Set player present - Gwen
+2024-11-24 15:01:46 - Set player present - Gwen
+2024-11-24 15:01:46 - Set player present - Gwen
+2024-11-24 15:01:48 - Printed chips ticket - Gwen
+2024-11-24 15:01:48 - Printed chips ticket - Gwen
+2024-11-24 15:01:48 - Printed chips ticket - Gwen
+2024-11-24 15:01:48 - Printed chips ticket - Gwen
+2024-11-24 15:02:29 - Printed chips ticket - Chloe
+2024-11-24 15:02:29 - Printed chips ticket - Chloe
+2024-11-24 15:02:45 - Set player present - Chloe
+2024-11-24 15:02:45 - Set player present - Chloe
+2024-11-24 15:02:45 - Set player present - Chloe
+2024-11-24 15:02:45 - Set player present - Chloe
+2024-11-24 15:02:45 - Set player present - Chloe
+2024-11-24 15:02:45 - Set player present - Chloe
+2024-11-24 15:02:45 - Set player present - Chloe
+2024-11-24 15:02:45 - Set player present - Chloe
+2024-11-24 15:02:45 - Set player present - Chloe
+2024-11-24 15:02:45 - Set player present - Chloe
+2024-11-24 15:04:03 - Set chips ticket collected - Chloe
+2024-11-24 15:04:27 - Set player present - Chloe
+2024-11-24 15:04:28 - Set player present - Chloe
+2024-11-24 15:04:29 - Set chips ticket collected - Chloe
+2024-11-24 15:04:30 - Set chips ticket collected - Chloe
+2024-11-24 15:04:31 - Printed chips ticket - Chloe
+2024-11-24 15:04:33 - Set chips ticket collected - Chloe
+2024-11-24 15:04:37 - Set chips ticket collected - Gwen
+2024-11-24 15:04:37 - Set chips ticket collected - Gwen
+2024-11-24 15:04:38 - Set player present - Gwen
+2024-11-24 15:04:38 - Set player present - Gwen
+2024-11-24 15:05:07 - Set player present - Chloe
+2024-11-24 15:05:07 - Set player present - Chloe
+2024-11-24 15:05:07 - Set player present - Chloe
+2024-11-24 15:05:07 - Set player present - Chloe
+2024-11-24 15:05:07 - Set player present - Chloe
+2024-11-24 15:05:07 - Set player present - Chloe
+2024-11-24 15:05:07 - Set player present - Chloe
+2024-11-24 15:05:07 - Set player present - Chloe
+2024-11-24 15:05:07 - Set player present - Chloe
+2024-11-24 15:05:16 - Printed chips ticket - Chloe
+2024-11-24 15:05:16 - Printed chips ticket - Chloe
+2024-11-24 15:05:16 - Printed chips ticket - Chloe
+2024-11-24 15:05:16 - Printed chips ticket - Chloe
+2024-11-24 15:05:16 - Printed chips ticket - Chloe
+2024-11-24 15:05:16 - Printed chips ticket - Chloe
+2024-11-24 15:05:16 - Printed chips ticket - Chloe
+2024-11-24 15:05:16 - Printed chips ticket - Chloe
+2024-11-24 15:05:16 - Printed chips ticket - Chloe
+2024-11-24 15:05:16 - Printed chips ticket - Chloe
+2024-11-24 15:05:16 - Printed chips ticket - Chloe
+2024-11-24 15:05:16 - Printed chips ticket - Chloe
+2024-11-24 15:05:18 - Set chips ticket collected - Chloe
+2024-11-24 15:05:18 - Set chips ticket collected - Chloe
+2024-11-24 15:05:18 - Set chips ticket collected - Chloe
+2024-11-24 15:05:18 - Set chips ticket collected - Chloe
+2024-11-24 15:05:18 - Set chips ticket collected - Chloe
+2024-11-24 15:05:18 - Set chips ticket collected - Chloe
+2024-11-24 15:05:18 - Set chips ticket collected - Chloe
+2024-11-24 15:05:18 - Set chips ticket collected - Chloe
+2024-11-24 15:05:18 - Set chips ticket collected - Chloe
+2024-11-24 15:05:18 - Set chips ticket collected - Chloe
+2024-11-24 15:05:18 - Set chips ticket collected - Chloe
+2024-11-24 15:05:18 - Set chips ticket collected - Chloe
+2024-11-24 15:05:19 - Set chips ticket collected - Chloe
+2024-11-24 15:05:19 - Set chips ticket collected - Chloe
+2024-11-24 15:05:19 - Set chips ticket collected - Chloe
+2024-11-24 15:05:19 - Set chips ticket collected - Chloe
+2024-11-24 15:05:19 - Set chips ticket collected - Chloe
+2024-11-24 15:05:19 - Set chips ticket collected - Chloe
+2024-11-24 15:05:20 - Set chips ticket collected - Chloe
+2024-11-24 15:05:20 - Set chips ticket collected - Chloe
+2024-11-24 15:05:20 - Set chips ticket collected - Chloe
+2024-11-24 15:05:20 - Set chips ticket collected - Chloe
+2024-11-24 15:05:20 - Set chips ticket collected - Chloe
+2024-11-24 15:05:20 - Set chips ticket collected - Chloe
+2024-11-24 15:06:06 - Set player present - Chloe
+2024-11-24 15:06:40 - Set player present - Gwen
+2024-11-24 15:06:40 - Set player present - Gwen
+2024-11-24 15:06:40 - Set player present - Gwen
+2024-11-24 15:06:42 - Set player present - Gwen
+2024-11-24 15:06:42 - Set player present - Gwen
+2024-11-24 15:06:42 - Set player present - Gwen
+2024-11-24 15:06:44 - Set chips ticket collected - Gwen
+2024-11-24 15:06:44 - Set chips ticket collected - Gwen
+2024-11-24 15:06:44 - Set chips ticket collected - Gwen
+2024-11-24 15:06:45 - Set player present - Gwen
+2024-11-24 15:06:45 - Set player present - Gwen
+2024-11-24 15:06:45 - Set player present - Gwen
+2024-11-24 15:09:09 - Set player present - Chloe
+2024-11-24 15:09:10 - Set player present - Chloe
+2024-11-24 15:09:10 - Set player present - Chloe
+2024-11-24 15:09:12 - Printed chips ticket - Chloe
+2024-11-24 15:09:27 - Set player present - Gwen
+2024-11-24 15:09:27 - Set player present - Gwen
+2024-11-24 15:09:27 - Set player present - Gwen
+2024-11-24 15:09:27 - Set player present - Gwen
+2024-11-24 15:09:27 - Set player present - Gwen
+2024-11-24 15:09:27 - Set player present - Gwen
+2024-11-24 15:11:42 - Set chips ticket collected - Gwen
+2024-11-24 15:11:44 - Set chips ticket collected - Gwen
+2024-11-24 15:11:46 - Set chips ticket collected - Gwen
+2024-11-24 15:11:46 - Printed chips ticket - Gwen
+2024-11-24 15:11:47 - Set chips ticket collected - Gwen
+2024-11-24 15:11:47 - Printed chips ticket - Gwen
+2024-11-24 15:11:47 - Set chips ticket collected - Gwen
+2024-11-24 15:11:47 - Printed chips ticket - Gwen
+2024-11-24 15:11:48 - Set chips ticket collected - Gwen
+2024-11-24 15:11:48 - Printed chips ticket - Gwen
+2024-11-24 15:11:48 - Set chips ticket collected - Gwen
+2024-11-24 15:11:48 - Printed chips ticket - Gwen
+2024-11-24 15:11:48 - Set chips ticket collected - Gwen
+2024-11-24 15:11:48 - Printed chips ticket - Gwen
+2024-11-24 15:11:48 - Set chips ticket collected - Gwen
+2024-11-24 15:11:48 - Printed chips ticket - Gwen
+2024-11-24 15:11:49 - Set chips ticket collected - Gwen
+2024-11-24 15:11:49 - Printed chips ticket - Gwen
+2024-11-24 15:11:49 - Set chips ticket collected - Gwen
+2024-11-24 15:11:49 - Printed chips ticket - Gwen
+2024-11-24 15:11:49 - Set chips ticket collected - Gwen
+2024-11-24 15:11:49 - Printed chips ticket - Gwen
+2024-11-24 15:11:49 - Set chips ticket collected - Gwen
+2024-11-24 15:11:49 - Printed chips ticket - Gwen
+2024-11-24 15:14:29 - Set player present - Gus
+2024-11-24 15:14:32 - Set chips ticket collected - Gus
+2024-11-24 15:14:32 - Printed chips ticket - Gus
+2024-11-24 15:14:33 - Set chips ticket collected - Gus
+2024-11-24 15:14:35 - Set chips ticket collected - Gus
+2024-11-24 15:14:36 - Printed chips ticket - Gus
+2024-11-24 15:14:37 - Set chips ticket collected - Gus
+2024-11-24 15:14:43 - Set chips ticket collected - Vic
+2024-11-24 15:14:43 - Set chips ticket collected - Vic
+2024-11-24 15:14:43 - Set chips ticket collected - Vic
+2024-11-24 15:14:45 - Set player present - Vic
+2024-11-24 15:14:45 - Set player present - Vic
+2024-11-24 15:14:45 - Set player present - Vic
+2024-11-24 15:14:46 - Set player present - Vic
+2024-11-24 15:14:46 - Set player present - Vic
+2024-11-24 15:14:46 - Set player present - Vic
+2024-11-24 15:14:47 - Set chips ticket collected - Vic
+2024-11-24 15:14:47 - Set chips ticket collected - Vic
+2024-11-24 15:14:47 - Set chips ticket collected - Vic
+2024-11-24 16:02:15 - Set player present - Chloe
+2024-11-24 16:02:16 - Set chips ticket collected - Chloe
+2024-11-24 16:02:17 - Set chips ticket collected - Chloe
+2024-11-24 16:04:50 - Set chips ticket collected - Chloe
+2024-11-24 16:04:50 - Set chips ticket collected - Chloe
+2024-11-24 16:04:50 - Set chips ticket collected - Chloe

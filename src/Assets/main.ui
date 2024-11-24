@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1045</width>
+    <width>1310</width>
     <height>564</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab">
        <property name="sizePolicy">
@@ -41,8 +41,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>572</width>
-             <height>192</height>
+             <width>837</width>
+             <height>186</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_10">
@@ -81,8 +81,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>572</width>
-             <height>192</height>
+             <width>837</width>
+             <height>185</height>
             </rect>
            </property>
            <property name="maximumSize">
@@ -145,10 +145,10 @@
         <string>Players</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout">
-        <item row="0" column="1">
-         <layout class="QHBoxLayout" name="horizontalLayout_4">
+        <item row="2" column="0">
+         <layout class="QHBoxLayout" name="horizontalLayout_7">
           <item>
-           <spacer name="horizontalSpacer_3">
+           <spacer name="horizontalSpacer_5">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -161,24 +161,11 @@
            </spacer>
           </item>
           <item>
-           <widget class="QLabel" name="label_player_selected">
+           <widget class="QPushButton" name="pushButton_refresh_players">
             <property name="text">
-             <string>TextLabel</string>
+             <string>Refresh</string>
             </property>
            </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_4">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
           </item>
          </layout>
         </item>
@@ -221,23 +208,6 @@
           </item>
          </layout>
         </item>
-        <item row="1" column="1">
-         <widget class="QScrollArea" name="scrollArea">
-          <property name="widgetResizable">
-           <bool>true</bool>
-          </property>
-          <widget class="QWidget" name="scrollAreaWidgetContents">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>0</y>
-             <width>88</width>
-             <height>353</height>
-            </rect>
-           </property>
-          </widget>
-         </widget>
-        </item>
         <item row="1" column="0">
          <widget class="QTableWidget" name="tableWidget_players_overview">
           <property name="editTriggers">
@@ -260,10 +230,94 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="0">
-         <layout class="QHBoxLayout" name="horizontalLayout_7">
+        <item row="1" column="1">
+         <widget class="QScrollArea" name="scrollArea">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>333</width>
+             <height>340</height>
+            </rect>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_4">
+            <item>
+             <layout class="QFormLayout" name="formLayout">
+              <property name="labelAlignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+              </property>
+              <item row="1" column="0">
+               <widget class="QCheckBox" name="checkBox_chips_ticket">
+                <property name="text">
+                 <string>Chips ticket collected</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QPushButton" name="pushButton_print_chips_ticket">
+                <property name="text">
+                 <string>print</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_2">
+                <property name="text">
+                 <string>Final money</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QSpinBox" name="spinBox_final_money">
+                <property name="maximum">
+                 <number>1000000</number>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QSpinBox" name="spinBox_kill_count"/>
+              </item>
+              <item row="3" column="0">
+               <widget class="QLabel" name="label_3">
+                <property name="text">
+                 <string>Kill count</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QCheckBox" name="checkBox_player_present">
+                <property name="text">
+                 <string>Present</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <layout class="QHBoxLayout" name="horizontalLayout_4">
           <item>
-           <spacer name="horizontalSpacer_5">
+           <spacer name="horizontalSpacer_3">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -276,11 +330,24 @@
            </spacer>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_refresh_players">
+           <widget class="QLabel" name="label_player_selected">
             <property name="text">
-             <string>Refresh</string>
+             <string>TextLabel</string>
             </property>
            </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer_4">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
           </item>
          </layout>
         </item>
@@ -295,8 +362,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1045</width>
-     <height>24</height>
+     <width>1310</width>
+     <height>37</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -348,7 +415,7 @@
    <property name="minimumSize">
     <size>
      <width>400</width>
-     <height>194</height>
+     <height>255</height>
     </size>
    </property>
    <attribute name="dockWidgetArea">
@@ -360,51 +427,63 @@
       <layout class="QVBoxLayout" name="verticalLayout_tickets"/>
      </item>
      <item>
-      <widget class="Line" name="line_2">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+      <widget class="QTabWidget" name="tabWidget_2">
+       <property name="currentIndex">
+        <number>1</number>
        </property>
-      </widget>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout">
-       <item>
-        <widget class="QLabel" name="label">
-         <property name="text">
-          <string>Logs</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButton_refresh_bank_logs">
-         <property name="text">
-          <string>Refresh</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <widget class="QPlainTextEdit" name="plainTextEdit_bank_logs">
-       <property name="undoRedoEnabled">
-        <bool>false</bool>
-       </property>
-       <property name="readOnly">
-        <bool>true</bool>
-       </property>
+       <widget class="QWidget" name="tab_2">
+        <attribute name="title">
+         <string>Logs</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_2">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>Logs</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_refresh_bank_logs">
+             <property name="text">
+              <string>Refresh</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QPlainTextEdit" name="plainTextEdit_bank_logs">
+           <property name="undoRedoEnabled">
+            <bool>false</bool>
+           </property>
+           <property name="readOnly">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_4">
+        <attribute name="title">
+         <string>Tickets Requests</string>
+        </attribute>
+       </widget>
       </widget>
      </item>
     </layout>
