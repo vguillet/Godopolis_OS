@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1310</width>
-    <height>564</height>
+    <width>1512</width>
+    <height>888</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -41,8 +41,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>837</width>
-             <height>186</height>
+             <width>1039</width>
+             <height>397</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_10">
@@ -81,8 +81,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>837</width>
-             <height>185</height>
+             <width>1039</width>
+             <height>298</height>
             </rect>
            </property>
            <property name="maximumSize">
@@ -240,8 +240,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>333</width>
-             <height>340</height>
+             <width>513</width>
+             <height>664</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -292,6 +292,13 @@
                <widget class="QCheckBox" name="checkBox_player_present">
                 <property name="text">
                  <string>Present</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QCheckBox" name="checkBox_player_paid">
+                <property name="text">
+                 <string>Paid</string>
                 </property>
                </widget>
               </item>
@@ -362,7 +369,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1310</width>
+     <width>1512</width>
      <height>37</height>
     </rect>
    </property>
@@ -429,7 +436,7 @@
      <item>
       <widget class="QTabWidget" name="tabWidget_2">
        <property name="currentIndex">
-        <number>1</number>
+        <number>2</number>
        </property>
        <widget class="QWidget" name="tab_2">
         <attribute name="title">
@@ -483,6 +490,21 @@
         <attribute name="title">
          <string>Tickets Requests</string>
         </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_5">
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_ticket_requests"/>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_5">
+        <attribute name="title">
+         <string>Slots Machines</string>
+        </attribute>
+        <layout class="QVBoxLayout" name="verticalLayout_6">
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_slots_machines"/>
+         </item>
+        </layout>
        </widget>
       </widget>
      </item>

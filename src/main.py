@@ -36,8 +36,13 @@ import plotly.express as px
 from ui_singleton import UiSingleton
 from Widgets.DealersWidget import DealersWidget
 from Widgets.PlayersWidget import PlayersWidget
+# from printing_module.pdf_receipt_gen import generate_pos_ticket, pdf_path
+# from printing_module.print_pdf import print_pdf_landscape
 
 ##################################################################################################################
+
+
+START_AMOUNT = 1000
 
 
 class Godopolis_OS:
@@ -186,14 +191,19 @@ class Godopolis_OS:
         # Retrieve the value and perform the print action
         value = self.value_input.text()
         if value.strip():  # Ensure the value is not empty
-            # TODO: Send amount to printer
+            # -> Generate radio ticket id
+            ticket_id = str(random.randint(100000, 999999))
+
+            # TODO: Uncomment
+            # generate_pos_ticket(ticket_id, "John Doe", amount=value)
+            # print_pdf_landscape(pdf_path)
             pass
 
         # -> Clear the input field
         self.value_input.clear()
 
         # -> Log the action
-        self.log_action("Printed ticket", value)
+        self.log_action(f"Printed ticket {ticket_id}", value)
 
     def credit_to_card(self):
         value = self.value_input.text()
@@ -458,6 +468,10 @@ class Godopolis_OS:
         self.load_players()
         self.sync_players()
 
+        # -> Select the first player by default
+        if self.ui.tableWidget_players_overview.rowCount() > 0:
+            self.ui.tableWidget_players_overview.selectRow(0)
+
         # -> Connect buttons
         self.ui.pushButton_refresh_players.clicked.connect(self.sync_players)
         self.ui.lineEdit_searchbox_player.returnPressed.connect(self.find_player)
@@ -619,7 +633,7 @@ class Godopolis_OS:
 
         # -> Update table
         # > Set the column headers
-        headers = ["Present", "Chips ticket collected", "Final money", "Kill count"]
+        headers = ["Present", "Paid", "Chips ticket collected", "Final money", "Kill count"]
         self.ui.tableWidget_players_overview.setColumnCount(len(headers))
         self.ui.tableWidget_players_overview.setHorizontalHeaderLabels(headers)
 
@@ -673,12 +687,16 @@ class Godopolis_OS:
             # > Present checkbox
             self.ui.checkBox_player_present.setChecked(self.players_dict[player_name]["Present"])
 
+            # > Paid checkbox
+            self.ui.checkBox_player_paid.setChecked(self.players_dict[player_name]["Paid"])
+
             # > Chips ticket collected checkbox
             self.ui.checkBox_chips_ticket.setChecked(self.players_dict[player_name]["Chips ticket collected"])
             self.ui.pushButton_print_chips_ticket.setEnabled(not self.players_dict[player_name]["Chips ticket collected"])
 
             # > Connect signals
             self.ui.checkBox_player_present.clicked.connect(self.set_player_present)
+            self.ui.checkBox_player_paid.clicked.connect(self.set_player_paid)
             self.ui.checkBox_chips_ticket.clicked.connect(self.set_chips_ticket_collected)
             self.ui.pushButton_print_chips_ticket.clicked.connect(self.print_chips_ticket)
 
@@ -701,7 +719,20 @@ class Godopolis_OS:
         self.sync_players()
 
         # -> Log the action
-        self.log_action("Set player present", player_name)
+        # self.log_action("Set player present", player_name)
+
+    def set_player_paid(self):
+        # -> Get the selected player name
+        player_name = self.ui.label_player_selected.text()
+
+        # -> Update the player data
+        self.players_dict[player_name]["Paid"] = self.ui.checkBox_player_paid.isChecked()
+
+        # -> Refresh table
+        self.sync_players()
+
+        # -> Log the action
+        # self.log_action("Set player paid", player_name)
 
     def set_chips_ticket_collected(self):
         # -> Get the selected player name
@@ -717,14 +748,18 @@ class Godopolis_OS:
         self.sync_players()
 
         # -> Log the action
-        self.log_action("Set chips ticket collected", player_name)
+        # self.log_action("Set chips ticket collected", player_name)
 
     def print_chips_ticket(self):
         # -> Get the selected player name
         player_name = self.ui.label_player_selected.text()
 
         # -> Print the chips ticket
-        print(f"Chips ticket printed for {player_name}.")
+        # > Generate radio ticket id
+        ticket_id = str(random.randint(100000, 999999))
+        # TODO: Uncomment
+        # generate_pos_ticket(ticket_id, "John Doe", amount=START_AMOUNT)
+        # print_pdf_landscape(pdf_path)
 
         # -> Set the chips ticket collected checkbox to True
         self.ui.checkBox_chips_ticket.setChecked(True)
@@ -734,7 +769,7 @@ class Godopolis_OS:
         self.sync_players()
 
         # -> Log the action
-        self.log_action("Printed chips ticket", player_name)
+        # self.log_action("Printed chips ticket", player_name)
 
     def set_player_final_money(self):
         # -> Get the selected player name
@@ -760,6 +795,7 @@ class Godopolis_OS:
     def player_template(self):
         template = {
             'Present': False,
+            'Paid': False,
             'Chips ticket collected': False,
             'Final money': 0,
             'Kill count': 0,

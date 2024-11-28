@@ -61,8 +61,9 @@ def draw_text(c, margin_x, current_y, rec_id, client_name):
 
     # Add client name
     c.setFont("Helvetica-Bold", 10)
-    c.drawString(margin_x, current_y, f"Client: {client_name}")
-    print(f"Client name drawn at: x={margin_x}, y={current_y}")
+    if client_name is not None:
+        c.drawString(margin_x, current_y, f"Client: {client_name}")
+        print(f"Client name drawn at: x={margin_x}, y={current_y}")
     current_y -= 20
     
     if False:
@@ -143,7 +144,7 @@ def draw_qr_code(c, receipt_id, receipt_width, current_y):
 
 
 # Main function to generate the receipt
-def generate_pos_ticket(rec_id, client_name):
+def generate_pos_ticket(rec_id, client_name=None, amount="1,200.00"):
     # Create a new PDF with an adjustable height, fixed width
     c = canvas.Canvas(pdf_path, pagesize=(receipt_width, initial_receipt_height))
     
@@ -161,12 +162,13 @@ def generate_pos_ticket(rec_id, client_name):
     current_y = draw_qr_code(c, rec_id, receipt_width, current_y)
 
     # Draw the "WINNING" message at the bottom
-    current_y = draw_winning(c, receipt_width, current_y, "1,200.00")
+    current_y = draw_winning(c, receipt_width, current_y, amount)
     # Finalize the page and save the PDF
     c.showPage()  # End of ticket
     c.save()      # Save the PDF
     print("PDF generation completed and saved.")
 
-# Usage example
-generate_pos_ticket("123456789", "John Doe")
-print_pdf_landscape(pdf_path)
+
+if __name__ == "__main__":
+    generate_pos_ticket("123456789", "John Doe")
+    print_pdf_landscape(pdf_path)
